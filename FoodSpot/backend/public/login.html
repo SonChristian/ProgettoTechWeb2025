@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Login – FoodSpot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="form-box">
+        <h1>Accedi</h1>
+        <p class="subtitle">Benvenuto! Inserisci le tue credenziali per accedere.</p>
+
+        <form id="login-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <button type="submit" class="btn">Accedi</button>
+        </form>
+
+        <p class="login-link">
+            Non hai un account? <a href="register.html">Registrati</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+            return;
+        }
+
+        // ✅ salva token e dati utente solo se login OK
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userName', data.user.nome);
+        localStorage.setItem('userSurname', data.user.cognome);
+        localStorage.setItem('userEmail', data.user.email);
+
+        // ✅ redirect alla dashboard
+        window.location.href = 'dashboard.html';
+
+    } catch (err) {
+        console.error(err);
+        alert('Errore durante il login');
+    }
+});
+</script>
+
+</body>
+</html>

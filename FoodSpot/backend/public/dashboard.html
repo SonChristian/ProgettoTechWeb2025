@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – FoodSpot</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Icone CSS -->  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="user-profile">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="User" class="user-avatar">
+                <h3 class="user-name" id="sidebar-username">Nome Cognome</h3>
+                <p class="user-email" id="sidebar-email">email@example.com</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active"><span class="fas fa-home"></span> Dashboard</a>
+                <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> Le mie prenotazioni</a>
+                <a href="impostazioni.html" class="nav-link"><span class="fas fa-cog"></span> Impostazioni</a>
+                <a href="#" id="logout" class="nav-link"><span class="fas fa-sign-out-alt"></span> Esci</a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <header class="header">
+                <h1 class="page-title" id="welcome">
+                    Benvenuto, <span id="user-name"></span>!
+                </h1>
+            </header>
+            
+           
+
+            <!-- Map Section -->
+            <section class="map-section">
+                <div class="section-header">
+                    <h2 class="section-title">Seleziona i locali disponibili sulla mappa</h2>
+                </div>
+                <!-- Barra di ricerca -->
+           
+                <div class="search-container">
+                   <input type="text" id="search-input" placeholder="Cerca un luogo">
+                   <button id="search-btn" class="btn btn-primary">
+                      <span class="fas fa-search"></span> Cerca
+                   </button>
+                </div>
+
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <div class="map-toggle" id="toggleSatellite"><i class="fas fa-satellite"></i> Satellite</div>
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background:#FF6B6B;"></div>
+                                <span>Ristorante</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background:#4ECDC4;"></div>
+                                <span>Bar/Pub</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODALE PRENOTAZIONE -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2>Prenota il tuo tavolo</h2>
+            <p id="restaurant-name"></p>
+
+            <label for="num-people">Numero persone:</label>
+            <input type="number" id="num-people" min="1" max="20" value="2">
+
+            <div class="modal-buttons">
+                <button id="confirm-booking" class="btn btn-primary">Conferma</button>
+                <button id="cancel-booking" class="btn btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Script -->
+    <script src="js/mappa.js"></script>
+    <script src="js/prenotazioni.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+    const token = localStorage.getItem('token');
+    const userName = localStorage.getItem('userName');
+    const userSurname = localStorage.getItem('userSurname');
+    const userEmail = localStorage.getItem('userEmail');
+
+    if (!token || !userName || !userSurname || !userEmail) {
+        window.location.href = 'login.html';
+    }
+
+    document.getElementById('user-name').innerText = `${userName} ${userSurname}`;
+    document.getElementById('sidebar-username').innerText = `${userName} ${userSurname}`;
+    document.getElementById('sidebar-email').innerText = userEmail;
+
+    document.getElementById('logout').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userSurname');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'login.html';
+    });
+    </script>
+</body>
+</html>

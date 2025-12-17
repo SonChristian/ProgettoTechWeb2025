@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impostazioni – FoodSpot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="user-profile">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="User" class="user-avatar">
+            <h3 class="user-name" id="sidebar-username">Nome Cognome</h3>
+            <p class="user-email" id="sidebar-email">email@example.com</p>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link"><span class="fas fa-home"></span> Dashboard</a>
+            <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> Le mie prenotazioni</a>
+            <a href="#" class="nav-link active"><span class="fas fa-cog"></span> Impostazioni</a>
+            <a href="index.html" class="nav-link"><span class="fas fa-sign-out-alt"></span> Esci</a>
+        </nav>
+    </aside>
+
+    <!-- Contenuto principale -->
+    <main class="main-content">
+        <header class="header">
+            <h1 class="page-title">Impostazioni</h1>
+            <button class="btn-find-restaurant"><span class="fas fa-save"></span> Salva tutto</button>
+        </header>
+
+        <!-- Sezione Profilo -->
+        <section class="settings-section">
+            <h2 class="section-title">Profilo</h2>
+            <div class="setting">
+                <label>Nome</label>
+                <input type="text" value="" placeholder="Inserisci il tuo nome">
+
+                <label>Cognome</label>
+                <input type="text" value="" placeholder="Inserisci il tuo cognome">
+
+                <label>Email</label>
+                <input type="email" value="" placeholder="Inserisci email">
+
+                <label>Password</label>
+                <input type="password" placeholder="Inserisci nuova password (lascia vuoto per non cambiare)">
+
+            </div>
+        </section>
+
+        <!-- Sezione Notifiche -->
+        <section class="settings-section">
+            <h2 class="section-title">Notifiche</h2>
+            <div class="setting-toggle">
+                <span>Email prenotazioni</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-toggle">
+                <span>Push notifications</span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Sezione Preferenze -->
+        <section class="settings-section">
+            <h2 class="section-title">Preferenze</h2>
+            <div class="setting">
+                <label>Raggio ricerca (km)</label>
+                <select>
+                    <option>5 km</option>
+                    <option selected>10 km</option>
+                    <option>20 km</option>
+                    <option>50 km</option>
+                </select>
+            </div>
+            <div class="setting-checkboxes">
+                <label><input type="checkbox" checked> Evita locali affollati (>70%)</label>
+                <label><input type="checkbox"> Solo locali con valutazione >4</label>
+                <label><input type="checkbox" checked> Prenotazioni last-minute</label>
+            </div>
+        </section>
+
+        <!-- Sezione Account -->
+        <section class="settings-section">
+            <button class="btn btn-outline">Elimina account</button>
+        </section>
+    </main>
+</div>
+
+<script>
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'login.html';
+}
+
+// Seleziona i campi del form
+const nomeInput = document.querySelector('.settings-section input[type="text"]:nth-of-type(1)');
+const cognomeInput = document.querySelector('.settings-section input[type="text"]:nth-of-type(2)');
+const emailInput = document.querySelector('.settings-section input[type="email"]');
+const passwordInput = document.querySelector('.settings-section input[type="password"]');
+const salvaBtn = document.querySelector('.btn-find-restaurant');
+
+// Elementi sidebar
+const sidebarNome = document.getElementById('sidebar-username');
+const sidebarEmail = document.getElementById('sidebar-email');
+
+// Carica dati utente
+async function caricaDatiUtente() {
+    try {
+        // Solo per validare token
+        const response = await fetch('/api/bookings', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Token non valido');
+
+        // Carica dati da localStorage
+        const nome = localStorage.getItem('userName') || '';
+        const cognome = localStorage.getItem('userSurname') || '';
+        const email = localStorage.getItem('userEmail') || '';
+
+        nomeInput.value = nome;
+        cognomeInput.value = cognome;
+        emailInput.value = email;
+
+        // Aggiorna sidebar
+        sidebarNome.textContent = `${nome} ${cognome}`;
+        sidebarEmail.textContent = email;
+
+    } catch (err) {
+        console.error(err);
+        alert('Errore durante il caricamento dei dati utente');
+    }
+}
+
+// Salva modifiche
+salvaBtn.addEventListener('click', async () => {
+    const nome = nomeInput.value.trim();
+    const cognome = cognomeInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!nome || !cognome || !email) {
+        alert('Compila tutti i campi obbligatori!');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+                nome, 
+                cognome, 
+                email, 
+                password: password || undefined
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.message || 'Errore durante l\'aggiornamento');
+            return;
+        }
+
+        // Aggiorna localStorage
+        localStorage.setItem('userName', data.user.nome);
+        localStorage.setItem('userSurname', data.user.cognome);
+        localStorage.setItem('userEmail', data.user.email);
+
+        // Aggiorna sidebar
+        sidebarNome.textContent = `${data.user.nome} ${data.user.cognome}`;
+        sidebarEmail.textContent = data.user.email;
+
+        alert('Dati aggiornati correttamente!');
+        passwordInput.value = '';
+    } catch (err) {
+        console.error(err);
+        alert('Errore durante l\'aggiornamento dei dati');
+    }
+});
+
+// Inizializza
+caricaDatiUtente();
+</script>
+
+<script>
+// Seleziona il pulsante
+const eliminaBtn = document.querySelector('.btn-outline');
+
+eliminaBtn.addEventListener('click', async () => {
+    if (!confirm('Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile!')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/user', {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || 'Errore durante l\'eliminazione dell\'account');
+            return;
+        }
+
+        alert('Account eliminato con successo!');
+        // Pulizia localStorage
+        localStorage.clear();
+        // Redirect al login
+        window.location.href = 'login.html';
+
+    } catch (err) {
+        console.error(err);
+        alert('Errore durante l\'eliminazione dell\'account');
+    }
+});
+</script>
+
+
+</body>
+</html>

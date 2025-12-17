@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione – FoodSpot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-box">
+            <h1>Crea un Account</h1>
+            <p class="subtitle">Registrati per scoprire i locali vicini con posti disponibili</p>
+
+            <form id="register-form">
+                <div class="input-group">
+                    <label for="nome">Nome</label>
+    <input type="text" id="nome" name="nome" placeholder="Inserisci il tuo nome" required>
+
+    <label for="cognome">Cognome</label>
+    <input type="text" id="cognome" name="cognome" placeholder="Inserisci il tuo cognome" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Inserisci la tua email" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Crea una password" required>
+
+    <label for="confirm_password">Conferma Password</label>
+    <input type="password" id="confirm_password" name="confirm_password" placeholder="Ripeti la password" required>
+
+                </div>
+
+                <button type="submit" class="btn">Registrati</button>
+
+                <p class="login-link">Hai già un account?
+                    <a href="login.html">Accedi</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value;
+    const cognome = document.getElementById('cognome').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+
+    if (password !== confirmPassword) {
+        alert('Le password non coincidono!');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, cognome, email, password })
+        });
+
+        const result = await response.json();
+        alert(result.message);
+
+        if (response.ok) {
+            // Reindirizza alla pagina di login dopo la registrazione
+            window.location.href = 'login.html';
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Errore nella registrazione');
+    }
+});
+</script>
+
+
+</body>
+</html>

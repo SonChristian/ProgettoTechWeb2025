@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le mie prenotazioni – FoodSpot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="user-profile">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="User" class="user-avatar">
+                <h3 class="user-name" id="sidebar-username"></h3>
+                <p class="user-email" id="sidebar-email"></p>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-link"><span class="fas fa-home"></span> Dashboard</a>
+                <a href="#" class="nav-link active"><span class="fas fa-calendar-alt"></span> Le mie prenotazioni</a>
+                <a href="impostazioni.html" class="nav-link"><span class="fas fa-cog"></span> Impostazioni</a>
+                <a href="#" id="logout" class="nav-link"><span class="fas fa-sign-out-alt"></span> Esci</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="page-title">Le mie prenotazioni</h1>
+            </header>
+
+            <!-- RIEPILOGO ULTIMA PRENOTAZIONE (in alto) -->
+            <section id="riepilogo-section" class="bookings-section" style="display: none;">
+                <div class="prenotazione riepilogo-prenotazione">
+                    <div class="info-top" style="justify-content: center;">
+                        <h3 style="color: #28a745;">✅ Nuova prenotazione aggiunta!</h3>
+                    </div>
+                    <div id="riepilogo-dettagli" style="text-align: center; padding: 20px;">
+                        <!-- Dettagli caricati dinamicamente -->
+                    </div>
+                </div>
+                <button onclick="nascondiRiepilogo()" class="btn btn-primary" style="margin: 20px auto; display: block;">
+                    <span class="fas fa-times"></span> Chiudi riepilogo
+                </button>
+            </section>
+
+            <!-- Lista prenotazioni -->
+            <section class="bookings-section">
+                <div id="lista-prenotazioni">
+                    <!-- Le prenotazioni verranno caricate qui da JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    const token = localStorage.getItem('token');
+    const userName = localStorage.getItem('userName');
+    const userSurname = localStorage.getItem('userSurname');
+    const userEmail = localStorage.getItem('userEmail');
+
+    if (!token || !userName || !userSurname || !userEmail) {
+        window.location.href = 'login.html';
+    }
+
+    // Sidebar: mostra Nome + Cognome e email
+    document.getElementById('sidebar-username').innerText = `${userName} ${userSurname}`;
+    document.getElementById('sidebar-email').innerText = userEmail;
+
+    // Logout
+    document.getElementById('logout').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userSurname');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'login.html';
+    });
+
+    // Annulla prenotazione (per ID)
+    async function annullaPrenotazione(bookingId) {
+        if (!confirm('Sei sicuro di voler annullare questa prenotazione?')) return;
+
+        try {
+            const response = await fetch(`/api/bookings/${bookingId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || 'Errore durante l’annullamento');
+                return;
+            }
+
+            alert('Prenotazione annullata!');
+            caricaPrenotazioni();
+
+        } catch (err) {
+            console.error(err);
+            alert('Errore durante l’annullamento');
+        }
+    }
+
+    // Carica prenotazioni dal database
+    async function caricaPrenotazioni() {
+        try {
+            const response = await fetch('/api/bookings', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            const prenotazioni = data.bookings || [];
+            const container = document.getElementById('lista-prenotazioni');
+
+            if (prenotazioni.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:#666;">
+                        <span class="fas fa-calendar-plus" style="font-size:48px; margin-bottom:20px; opacity:0.5;"></span>
+                        <h3>Nessuna prenotazione</h3>
+                        <p>Fai la tua prima prenotazione dalla Dashboard!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = prenotazioni.map(p => `
+                <div class="prenotazione">
+                    <div class="info-top">
+                        <h3>${p.restaurantName}</h3>
+                        <span class="stato prenotato">Prenotato</span>
+                    </div>
+                    <div class="dettagli">
+                    <div>
+                        <span class="fas fa-calendar"></span>
+                            Prenotato il: ${formatDateTime(p.createdAt)}
+                    </div>
+                    <div>
+                        <span class="fas fa-users"></span>
+                        ${p.numPeople} persone
+                    </div>
+                    </div>
+
+                    <div class="azioni">
+                        <button class="btn btn-primary" onclick="annullaPrenotazione('${p._id}')">
+                            <span class="fas fa-times"></span> Annulla
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (err) {
+            console.error(err);
+            alert('Errore durante il caricamento delle prenotazioni');
+        }
+    }
+
+    window.addEventListener('load', caricaPrenotazioni);
+
+    function formatDateTime(dateString) {
+    const date = new Date(dateString);
+
+    const giorno = date.toLocaleDateString('it-IT');
+    const ora = date.toLocaleTimeString('it-IT', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    return `${giorno} alle ${ora}`;
+}
+
+    </script>
+
+</body>
+</html>
