@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-        alert('Devi effettuare il login');
+        alert('You need to login');
         window.location.href = 'login.html';
         return;
     }
@@ -19,19 +19,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     searchButton.addEventListener('click', async () => {
         const query = searchInput.value.trim();
-        if (!query) return alert('Inserisci una località');
+        if (!query) return alert('Insert a place');
 
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
             const results = await response.json();
-            if (results.length === 0) return alert('Località non trovata');
+            if (results.length === 0) return alert('Place not found');
 
             const { lat, lon } = results[0];
             map.setView([parseFloat(lat), parseFloat(lon)], 13);
 
         } catch (err) {
             console.error(err);
-            alert('Errore durante la ricerca della località');
+            alert('Error while searching for location');
         }
     });
 
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await response.json();
             return data.restaurants.filter(r => r.availableSeats > 0) || [];
         } catch (err) {
-            console.error('Errore nel recupero ristoranti:', err);
+            console.error('Error retrieving restaurants:', err);
             return [];
         }
     }
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <em>${place.address}</em><br>
             Orari: ${place.openingHours}<br>
             Posti disponibili: ${place.availableSeats}<br>
-            <button class="book-btn" data-id="${place._id}" data-name="${place.name}">Prenota ora</button>
+            <button class="book-btn" data-id="${place._id}" data-name="${place.name}">Bookign now</button>
         `;
         marker.bindPopup(popupContent);
     });
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('confirm-booking').onclick = async () => {
             const numPeople = parseInt(document.getElementById('num-people').value, 10);
             if (!numPeople || numPeople <= 0) {
-                alert('Inserisci un numero valido di persone');
+                alert('Enter a valid number of people');
                 return;
             }
 
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const data = await response.json();
                 if (!response.ok) {
-                    alert(data.message || 'Errore durante la prenotazione');
+                    alert(data.message || 'Error while booking');
                     return;
                 }
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             } catch (err) {
                 console.error(err);
-                alert('Errore durante la prenotazione');
+                alert('Error while booking');
             }
         };
     }

@@ -32,12 +32,12 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ message: 'Token mancante' });
+        return res.status(401).json({ message: 'Missing token' });
     }
 
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(403).json({ message: 'Token non valido' });
+            return res.status(403).json({ message: 'Invalid token' });
         }
         req.userId = decoded.id;
         next();
@@ -47,8 +47,8 @@ function authenticateToken(req, res, next) {
 // ====================== UTILS ======================
 function getFasciaOraria(date = new Date()) {
     const hour = date.getHours();
-    if (hour >= 11 && hour < 16) return 'pranzo';
-    if (hour >= 18 && hour < 24) return 'cena';
+    if (hour >= 11 && hour < 16) return 'Lunch';
+    if (hour >= 18 && hour < 24) return 'Dinner';
     return null;
 }
 
@@ -59,13 +59,13 @@ app.post('/api/register', async (req, res) => {
     const { nome, cognome, email, password } = req.body;
 
     if (!nome || !cognome || !email || !password) {
-        return res.status(400).json({ message: 'Tutti i campi sono obbligatori' });
+        return res.status(400).json({ message: 'All fields are required' });
     }
 
     try {
         const exists = await User.findOne({ email });
         if (exists) {
-            return res.status(400).json({ message: 'Email già registrata' });
+            return res.status(400).json({ message: 'Email already registered' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -77,11 +77,11 @@ app.post('/api/register', async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json({ message: 'Registrazione completata' });
+        res.status(201).json({ message: 'Registration complete' });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server errore' });
     }
 });
 
@@ -92,12 +92,12 @@ app.post('/api/login', async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Credenziali non valide' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) {
-            return res.status(400).json({ message: 'Credenziali non valide' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1h' });
@@ -113,7 +113,7 @@ app.post('/api/login', async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -125,7 +125,7 @@ app.put('/api/user', authenticateToken, async (req, res) => {
 
     try {
         const user = await User.findById(req.userId);
-        if (!user) return res.status(404).json({ message: 'Utente non trovato' });
+        if (!user) return res.status(404).json({ message: 'User not found' });
 
         if (nome) user.nome = nome;
         if (cognome) user.cognome = cognome;
@@ -138,7 +138,7 @@ app.put('/api/user', authenticateToken, async (req, res) => {
         await user.save();
 
         res.json({
-            message: 'Dati aggiornati',
+            message: 'Updated data',
             user: {
                 nome: user.nome,
                 cognome: user.cognome,
@@ -148,7 +148,7 @@ app.put('/api/user', authenticateToken, async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -158,11 +158,11 @@ app.delete('/api/user', authenticateToken, async (req, res) => {
         await Booking.deleteMany({ user: req.userId });
         await User.findByIdAndDelete(req.userId);
 
-        res.json({ message: 'Account eliminato con successo' });
+        res.json({ message: 'Account successfully deleted' });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -173,7 +173,7 @@ app.post('/api/book', authenticateToken, async (req, res) => {
     const { restaurantId, restaurantName, numPeople } = req.body;
 
     if (!restaurantId || !restaurantName || numPeople <= 0) {
-        return res.status(400).json({ message: 'Dati non validi' });
+        return res.status(400).json({ message: 'Invalid data' });
     }
 
     const now = new Date();
@@ -181,7 +181,7 @@ app.post('/api/book', authenticateToken, async (req, res) => {
 
     if (!fascia) {
         return res.status(400).json({
-            message: 'Prenotazioni disponibili solo a pranzo o cena'
+            message: 'Reservations available for lunch or dinner only'
         });
     }
 
@@ -197,17 +197,17 @@ app.post('/api/book', authenticateToken, async (req, res) => {
 
         if (existing) {
             return res.status(400).json({
-                message: `Hai già una prenotazione per ${fascia}`
+                message: `You already have a reservation for ${fascia}`
             });
         }
 
         const restaurant = await Restaurant.findById(restaurantId);
         if (!restaurant) {
-            return res.status(404).json({ message: 'Ristorante non trovato' });
+            return res.status(404).json({ message: 'Restaurant not found' });
         }
 
         if (restaurant.availableSeats < numPeople) {
-            return res.status(400).json({ message: 'Posti insufficienti' });
+            return res.status(400).json({ message: 'Insufficient places' });
         }
 
         restaurant.availableSeats -= numPeople;
@@ -224,13 +224,13 @@ app.post('/api/book', authenticateToken, async (req, res) => {
         await booking.save();
 
         res.status(201).json({
-            message: 'Prenotazione confermata',
+            message: 'confirmed booking',
             remainingSeats: restaurant.availableSeats
         });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -244,7 +244,7 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -253,7 +253,7 @@ app.delete('/api/bookings/:id', authenticateToken, async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
         if (!booking) {
-            return res.status(404).json({ message: 'Prenotazione non trovata' });
+            return res.status(404).json({ message: 'Booking not found' });
         }
 
         // 🔥 USA restaurantId DALLA PRENOTAZIONE
@@ -265,11 +265,11 @@ app.delete('/api/bookings/:id', authenticateToken, async (req, res) => {
 
         await booking.deleteOne();
 
-        res.json({ message: 'Prenotazione annullata con successo' });
+        res.json({ message: 'Reservation successfully cancelled' });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore durante l’annullamento' });
+        res.status(500).json({ message: 'Error during cancellation' });
     }
 });
 
@@ -285,7 +285,7 @@ app.get('/api/restaurants', async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Errore server' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -296,5 +296,5 @@ app.get('/', (req, res) => {
 
 // ====================== START ======================
 app.listen(PORT, () => {
-    console.log(`Server avviato su http://localhost:${PORT}`);
+    console.log(`Server started on http://localhost:${PORT}`);
 });

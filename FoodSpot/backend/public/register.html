@@ -11,31 +11,31 @@
     <div class="container">
         <div class="form-box">
             <h1>Crea un Account</h1>
-            <p class="subtitle">Registrati per scoprire i locali vicini con posti disponibili</p>
+            <p class="subtitle">Register to discover nearby venues with places available</p>
 
             <form id="register-form">
                 <div class="input-group">
-                    <label for="nome">Nome</label>
-    <input type="text" id="nome" name="nome" placeholder="Inserisci il tuo nome" required>
+                    <label for="nome">Name</label>
+    <input type="text" id="nome" name="nome" placeholder="enter your name" required>
 
-    <label for="cognome">Cognome</label>
-    <input type="text" id="cognome" name="cognome" placeholder="Inserisci il tuo cognome" required>
+    <label for="cognome">Surname</label>
+    <input type="text" id="cognome" name="cognome" placeholder="Enter your surname" required>
 
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="Inserisci la tua email" required>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
     <label for="password">Password</label>
-    <input type="password" id="password" name="password" placeholder="Crea una password" required>
+    <input type="password" id="password" name="password" placeholder="Create a password" required>
 
-    <label for="confirm_password">Conferma Password</label>
-    <input type="password" id="confirm_password" name="confirm_password" placeholder="Ripeti la password" required>
+    <label for="confirm_password">Confirm Password</label>
+    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
 
                 </div>
 
-                <button type="submit" class="btn">Registrati</button>
+                <button type="submit" class="btn">Register</button>
 
-                <p class="login-link">Hai già un account?
-                    <a href="login.html">Accedi</a>
+                <p class="login-link">Do you already have an account?
+                    <a href="login.html">Log In</a>
                 </p>
             </form>
         </div>
@@ -52,7 +52,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     const confirmPassword = document.getElementById('confirm_password').value;
 
     if (password !== confirmPassword) {
-        alert('Le password non coincidono!');
+        alert('Password do not match');
         return;
     }
 
@@ -72,7 +72,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         }
     } catch (err) {
         console.error(err);
-        alert('Errore nella registrazione');
+        alert('error while registering');
     }
 });
 </script>

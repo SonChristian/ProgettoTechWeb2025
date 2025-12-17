@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impostazioni – FoodSpot</title>
+    <title>Settings – FoodSpot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,15 +13,15 @@
     <aside class="sidebar">
         <div class="user-profile">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="User" class="user-avatar">
-            <h3 class="user-name" id="sidebar-username">Nome Cognome</h3>
+            <h3 class="user-name" id="sidebar-username">Name Surname</h3>
             <p class="user-email" id="sidebar-email">email@example.com</p>
         </div>
 
         <nav class="nav-menu">
             <a href="dashboard.html" class="nav-link"><span class="fas fa-home"></span> Dashboard</a>
-            <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> Le mie prenotazioni</a>
-            <a href="#" class="nav-link active"><span class="fas fa-cog"></span> Impostazioni</a>
-            <a href="index.html" class="nav-link"><span class="fas fa-sign-out-alt"></span> Esci</a>
+            <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> My bookings</a>
+            <a href="#" class="nav-link active"><span class="fas fa-cog"></span> Settings</a>
+            <a href="index.html" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log out</a>
         </nav>
     </aside>
 
@@ -29,24 +29,24 @@
     <main class="main-content">
         <header class="header">
             <h1 class="page-title">Impostazioni</h1>
-            <button class="btn-find-restaurant"><span class="fas fa-save"></span> Salva tutto</button>
+            <button class="btn-find-restaurant"><span class="fas fa-save"></span> Save</button>
         </header>
 
         <!-- Sezione Profilo -->
         <section class="settings-section">
             <h2 class="section-title">Profilo</h2>
             <div class="setting">
-                <label>Nome</label>
-                <input type="text" value="" placeholder="Inserisci il tuo nome">
+                <label>Name</label>
+                <input type="text" value="" placeholder="Enter your name">
 
                 <label>Cognome</label>
-                <input type="text" value="" placeholder="Inserisci il tuo cognome">
+                <input type="text" value="" placeholder="Enter your surname">
 
                 <label>Email</label>
-                <input type="email" value="" placeholder="Inserisci email">
+                <input type="email" value="" placeholder="Enter your email">
 
                 <label>Password</label>
-                <input type="password" placeholder="Inserisci nuova password (lascia vuoto per non cambiare)">
+                <input type="password" placeholder="Enter new password (leave blank so as not to change)">
 
             </div>
         </section>
@@ -55,7 +55,7 @@
         <section class="settings-section">
             <h2 class="section-title">Notifiche</h2>
             <div class="setting-toggle">
-                <span>Email prenotazioni</span>
+                <span>Email reservations</span>
                 <label class="switch">
                     <input type="checkbox" checked>
                     <span class="slider"></span>
@@ -74,7 +74,7 @@
         <section class="settings-section">
             <h2 class="section-title">Preferenze</h2>
             <div class="setting">
-                <label>Raggio ricerca (km)</label>
+                <label>Research radius (km)</label>
                 <select>
                     <option>5 km</option>
                     <option selected>10 km</option>
@@ -83,15 +83,15 @@
                 </select>
             </div>
             <div class="setting-checkboxes">
-                <label><input type="checkbox" checked> Evita locali affollati (>70%)</label>
-                <label><input type="checkbox"> Solo locali con valutazione >4</label>
-                <label><input type="checkbox" checked> Prenotazioni last-minute</label>
+                <label><input type="checkbox" checked> Avoid crowded places (>70%)</label>
+                <label><input type="checkbox"> Only premises with rating >4</label>
+                <label><input type="checkbox" checked> Reservations last-minute</label>
             </div>
         </section>
 
         <!-- Sezione Account -->
         <section class="settings-section">
-            <button class="btn btn-outline">Elimina account</button>
+            <button class="btn btn-outline">Delete account</button>
         </section>
     </main>
 </div>
@@ -137,7 +137,7 @@ async function caricaDatiUtente() {
 
     } catch (err) {
         console.error(err);
-        alert('Errore durante il caricamento dei dati utente');
+        alert('Error loading user data');
     }
 }
 
@@ -149,7 +149,7 @@ salvaBtn.addEventListener('click', async () => {
     const password = passwordInput.value.trim();
 
     if (!nome || !cognome || !email) {
-        alert('Compila tutti i campi obbligatori!');
+        alert('Fill in all required fields!');
         return;
     }
 
@@ -170,7 +170,7 @@ salvaBtn.addEventListener('click', async () => {
 
         const data = await response.json();
         if (!response.ok) {
-            alert(data.message || 'Errore durante l\'aggiornamento');
+            alert(data.message || 'Error during update');
             return;
         }
 
@@ -183,11 +183,11 @@ salvaBtn.addEventListener('click', async () => {
         sidebarNome.textContent = `${data.user.nome} ${data.user.cognome}`;
         sidebarEmail.textContent = data.user.email;
 
-        alert('Dati aggiornati correttamente!');
+        alert('Data updated correctly!');
         passwordInput.value = '';
     } catch (err) {
         console.error(err);
-        alert('Errore durante l\'aggiornamento dei dati');
+        alert('Error during update');
     }
 });
 
@@ -200,7 +200,7 @@ caricaDatiUtente();
 const eliminaBtn = document.querySelector('.btn-outline');
 
 eliminaBtn.addEventListener('click', async () => {
-    if (!confirm('Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile!')) {
+    if (!confirm('Are you sure you want to delete your account? This action is irreversible!')) {
         return;
     }
 
@@ -213,11 +213,11 @@ eliminaBtn.addEventListener('click', async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || 'Errore durante l\'eliminazione dell\'account');
+            alert(data.message || 'Error deleting account');
             return;
         }
 
-        alert('Account eliminato con successo!');
+        alert('Account successfully deleted!');
         // Pulizia localStorage
         localStorage.clear();
         // Redirect al login
@@ -225,7 +225,7 @@ eliminaBtn.addEventListener('click', async () => {
 
     } catch (err) {
         console.error(err);
-        alert('Errore durante l\'eliminazione dell\'account');
+        alert('Error deleting account');
     }
 });
 </script>

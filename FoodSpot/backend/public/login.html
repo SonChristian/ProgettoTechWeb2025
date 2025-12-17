@@ -10,7 +10,7 @@
 <div class="container">
     <div class="form-box">
         <h1>Accedi</h1>
-        <p class="subtitle">Benvenuto! Inserisci le tue credenziali per accedere.</p>
+        <p class="subtitle">Welcome! Enter your credentials to log in.</p>
 
         <form id="login-form">
             <div class="input-group">
@@ -23,11 +23,11 @@
                 <input type="password" id="password" required>
             </div>
 
-            <button type="submit" class="btn">Accedi</button>
+            <button type="submit" class="btn">Submit</button>
         </form>
 
         <p class="login-link">
-            Non hai un account? <a href="register.html">Registrati</a>
+            Not registered yet? <a href="register.html">Register</a>
         </p>
     </div>
 </div>
@@ -64,7 +64,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     } catch (err) {
         console.error(err);
-        alert('Errore durante il login');
+        alert('Error during login');
     }
 });
 </script>

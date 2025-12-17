@@ -21,14 +21,14 @@
         <aside class="sidebar">
             <div class="user-profile">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt="User" class="user-avatar">
-                <h3 class="user-name" id="sidebar-username">Nome Cognome</h3>
+                <h3 class="user-name" id="sidebar-username">Name Surname</h3>
                 <p class="user-email" id="sidebar-email">email@example.com</p>
             </div>
             <nav class="nav-menu">
                 <a href="#" class="nav-link active"><span class="fas fa-home"></span> Dashboard</a>
-                <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> Le mie prenotazioni</a>
-                <a href="impostazioni.html" class="nav-link"><span class="fas fa-cog"></span> Impostazioni</a>
-                <a href="#" id="logout" class="nav-link"><span class="fas fa-sign-out-alt"></span> Esci</a>
+                <a href="prenotazioni.html" class="nav-link"><span class="fas fa-calendar-alt"></span> My Bookings</a>
+                <a href="impostazioni.html" class="nav-link"><span class="fas fa-cog"></span> Settings</a>
+                <a href="#" id="logout" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log out</a>
             </nav>
         </aside>
 
@@ -36,7 +36,7 @@
         <main class="main-content">
             <header class="header">
                 <h1 class="page-title" id="welcome">
-                    Benvenuto, <span id="user-name"></span>!
+                    Welcome, <span id="user-name"></span>!
                 </h1>
             </header>
             
@@ -45,12 +45,12 @@
             <!-- Map Section -->
             <section class="map-section">
                 <div class="section-header">
-                    <h2 class="section-title">Seleziona i locali disponibili sulla mappa</h2>
+                    <h2 class="section-title">Select available locations on the map</h2>
                 </div>
                 <!-- Barra di ricerca -->
            
                 <div class="search-container">
-                   <input type="text" id="search-input" placeholder="Cerca un luogo">
+                   <input type="text" id="search-input" placeholder="Find a place">
                    <button id="search-btn" class="btn btn-primary">
                       <span class="fas fa-search"></span> Cerca
                    </button>
@@ -63,7 +63,7 @@
                         <div class="map-legend">
                             <div class="legend-item">
                                 <div class="legend-color" style="background:#FF6B6B;"></div>
-                                <span>Ristorante</span>
+                                <span>Restaurant</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-color" style="background:#4ECDC4;"></div>
@@ -80,15 +80,15 @@
     <div id="booking-modal" class="modal">
         <div class="modal-content">
             <span id="close-modal" class="close">&times;</span>
-            <h2>Prenota il tuo tavolo</h2>
+            <h2>reserve your table</h2>
             <p id="restaurant-name"></p>
 
-            <label for="num-people">Numero persone:</label>
+            <label for="num-people">Number of people:</label>
             <input type="number" id="num-people" min="1" max="20" value="2">
 
             <div class="modal-buttons">
-                <button id="confirm-booking" class="btn btn-primary">Conferma</button>
-                <button id="cancel-booking" class="btn btn-secondary">Annulla</button>
+                <button id="confirm-booking" class="btn btn-primary">Confirm</button>
+                <button id="cancel-booking" class="btn btn-secondary">Cancel</button>
             </div>
         </div>
     </div>
