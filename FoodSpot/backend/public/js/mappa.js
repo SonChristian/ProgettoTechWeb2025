@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const popupContent = `
             <strong>${place.name}</strong><br>
             <em>${place.address}</em><br>
-            Orari: ${place.openingHours}<br>
-            Posti disponibili: ${place.availableSeats}<br>
+            Times: ${place.openingHours}<br>
+            Seats available: ${place.availableSeats}<br>
             <button class="book-btn" data-id="${place._id}" data-name="${place.name}">Bookign now</button>
         `;
         marker.bindPopup(popupContent);
