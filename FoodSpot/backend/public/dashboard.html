@@ -47,7 +47,7 @@
                 <div class="section-header">
                     <h2 class="section-title">Select available locations on the map</h2>
                 </div>
-                <!-- Barra di ricerca -->
+                <!-- research bar -->
            
                 <div class="search-container">
                    <input type="text" id="search-input" placeholder="Find a place">
@@ -76,7 +76,7 @@
         </main>
     </div>
 
-    <!-- MODALE PRENOTAZIONE -->
+    <!-- booking -->
     <div id="booking-modal" class="modal">
         <div class="modal-content">
             <span id="close-modal" class="close">&times;</span>
@@ -101,27 +101,6 @@
     <script src="js/prenotazioni.js"></script>
     <script src="js/main.js"></script>
 
-    <script>
-    const token = localStorage.getItem('token');
-    const userName = localStorage.getItem('userName');
-    const userSurname = localStorage.getItem('userSurname');
-    const userEmail = localStorage.getItem('userEmail');
-
-    if (!token || !userName || !userSurname || !userEmail) {
-        window.location.href = 'login.html';
-    }
-
-    document.getElementById('user-name').innerText = `${userName} ${userSurname}`;
-    document.getElementById('sidebar-username').innerText = `${userName} ${userSurname}`;
-    document.getElementById('sidebar-email').innerText = userEmail;
-
-    document.getElementById('logout').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userSurname');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'login.html';
-    });
-    </script>
+    <script src="js/dashboard_T.js"></script>
 </body>
 </html>

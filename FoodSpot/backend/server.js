@@ -1,11 +1,11 @@
-const express = require('express');
-const app = express();
-const path = require('path');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const express = require('express'); // import Express framework and build server for HTTP request
+const app = express(); // create the app for the server and manage API 
+const path = require('path'); // manage the file path safe
+const mongoose = require('mongoose'); // import of lib mongoose for communicate with db
+const bcrypt = require('bcrypt'); // crypt password
+const jwt = require('jsonwebtoken'); // token
 
-// Models
+// Models / collections of the database 
 const User = require('./models/User');
 const Restaurant = require('./models/Restaurant');
 const Booking = require('./models/Booking');
@@ -17,7 +17,7 @@ const SECRET_KEY = 'supersecret123';
 const MONGO_URI = 'mongodb+srv://foodspot_user:FSTechWeb@foodspottechweb.m8th39g.mongodb.net/foodspotDB?retryWrites=true&w=majority';
 
 // ====================== MIDDLEWARE ======================
-app.use(express.json());
+app.use(express.json()); // read data from frontend
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -190,7 +190,7 @@ app.post('/api/book', authenticateToken, async (req, res) => {
 
     try {
         const existing = await Booking.findOne({
-            user: req.userId,
+            user: req.userId, // from the token generate for that user, so that his information can be taken to understand who made the reservation
             fascia,
             createdAt: { $gte: startOfDay }
         });

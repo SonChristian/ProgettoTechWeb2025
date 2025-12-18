@@ -32,42 +32,7 @@
     </div>
 </div>
 
-<script>
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            alert(data.message);
-            return;
-        }
-
-        // ✅ salva token e dati utente solo se login OK
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userName', data.user.nome);
-        localStorage.setItem('userSurname', data.user.cognome);
-        localStorage.setItem('userEmail', data.user.email);
-
-        // ✅ redirect alla dashboard
-        window.location.href = 'dashboard.html';
-
-    } catch (err) {
-        console.error(err);
-        alert('Error during login');
-    }
-});
-</script>
+<script src="js/login.js"></script>
 
 </body>
 </html>
