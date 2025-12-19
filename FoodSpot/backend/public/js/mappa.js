@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Centro mappa su Napoli
-    const map = L.map('map').setView([40.8518, 14.2681], 13);
+    const map = L.map('map').setView([40.8565, 14.2681], 11);
+
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);

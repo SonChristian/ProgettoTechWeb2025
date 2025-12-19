@@ -1,5 +1,4 @@
 window.mostraFormPrenotazione = function(ristorante) {
-    // ... form identico precedente ...
     document.body.insertAdjacentHTML('beforeend', `
         <div id="prenotazione-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:2000;display:flex;align-items:center;justify-content:center">
             <div style="background:white;padding:30px;border-radius:10px;max-width:400px;width:90%;box-shadow:0 10px 30px rgba(0,0,0,0.3)">
@@ -21,8 +20,8 @@ window.mostraFormPrenotazione = function(ristorante) {
                         value="${new Date(Date.now() + 86400000).toISOString().slice(0,16)}">
                 </div>
                 <div style="display:flex;gap:10px">
-                    <button id="conferma-btn" style="flex:1;padding:14px;background:#e63946;color:white;border:none;border-radius:6px;cursor:pointer;font-size:16px;font-weight:bold">✅ Conferma</button>
-                    <button onclick="chiudiFormPrenotazione()" style="flex:1;padding:14px;background:#ddd;color:#333;border:none;border-radius:6px;cursor:pointer;font-size:16px">❌ Annulla</button>
+                    <button id="conferma-btn" style="flex:1;padding:14px;background:#e63946;color:white;border:none;border-radius:6px;cursor:pointer;font-size:16px;font-weight:bold">Conferma</button>
+                    <button onclick="chiudiFormPrenotazione()" style="flex:1;padding:14px;background:#ddd;color:#333;border:none;border-radius:6px;cursor:pointer;font-size:16px">Annulla</button>
                 </div>
             </div>
         </div>
